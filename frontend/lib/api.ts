@@ -2,7 +2,7 @@ import axios from 'axios';
 import { supabase } from './supabase'; // Import your client
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://supportiq.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },

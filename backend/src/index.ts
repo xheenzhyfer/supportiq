@@ -37,7 +37,7 @@ const startServer = async () => {
 
     // 3. Start Server
     server.listen(PORT, () => {
-      console.log(`\n✅ SupportIQ Server running on http://localhost:${PORT}`);
+      console.log(`\n✅ SupportIQ Server running on port ${PORT}`);
       console.log(`🛡️  Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 
