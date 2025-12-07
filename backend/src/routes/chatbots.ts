@@ -86,20 +86,6 @@ router.get('/:id', requireAuth, async (req: AuthRequest, res: Response) => {
 router.post('/', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const { name, welcomeMessage, suggestions } = req.body;
-    // ... code ...
-    // Note: To save token usage, I am just using ellipsis here, 
-    // but in replacement, I will ensure existing code integrity roughly.
-    // Actually, to avoid deleting the body of POST, I should insert BEFORE it perfectly or AFTER it.
-    // Let's insert BEFORE POST to be safe with contexts.
-    
-    // WAIT. simpler to insert after GET /.
-    // GET / is lines 41-58.
-    // Let's Insert at line 59.
-  } catch(e) {}
-});
-router.post('/', requireAuth, async (req: AuthRequest, res: Response) => {
-  try {
-    const { name, welcomeMessage, suggestions } = req.body;
     const orgId = req.orgId; // Automatically injected by middleware
 
     if (!name) {
