@@ -91,6 +91,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Button>
       </div>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-10 bg-white pt-16 md:hidden flex flex-col">
+          <nav className="flex-1 p-4 space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link 
+                  key={item.href} 
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium transition-colors",
+                    isActive 
+                      ? "bg-indigo-50 text-indigo-700" 
+                      : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                  )}
+                >
+                  <item.icon size={20} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="p-4 border-t mb-safe">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-zinc-500 hover:text-red-600 hover:bg-red-50"
+              onClick={handleLogout}
+            >
+              <LogOut size={20} className="mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <main className={cn(
         "flex-1 transition-all duration-200 ease-in-out pt-16 md:pt-0 md:pl-64",

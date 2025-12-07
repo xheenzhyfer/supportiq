@@ -24,29 +24,42 @@ export const processWebsite = async (url: string, chatbotId: string) => {
     
     // 3. Embed & Save Each Chunk
     for (const chunk of chunks) {
-      try {
-        // A. Generate Embedding (Gemini)
-        // Rate Limit Guard: Wait 4 seconds between requests (15 RPM = 1 req / 4s)
-        await sleep(4000); 
-        
-        const vector = await generateEmbedding(chunk);
+      let retries = 0;
+      const maxRetries = 3;
+      let success = false;
 
-        // B. Save to Database (Supabase)
-        await saveDocument({
-          chatbotId,
-          content: chunk,
-          embedding: vector,
-          metadata: {
-            source: page.url,
-            title: page.title
+      while (!success && retries <= maxRetries) {
+        try {
+          // A. Generate Embedding (Gemini)
+          const vector = await generateEmbedding(chunk);
+
+          // B. Save to Database (Supabase)
+          await saveDocument({
+            chatbotId,
+            content: chunk,
+            embedding: vector,
+            metadata: {
+              source: page.url,
+              title: page.title
+            }
+          });
+
+          totalChunks++;
+          process.stdout.write('.'); // Show progress dot
+          success = true;
+
+        } catch (error: any) {
+          // Check for Rate Limit (429)
+          if (error.message?.includes('429') || error.status === 429) {
+            retries++;
+            const waitTime = 2000 * Math.pow(2, retries); // 4s, 8s, 16s
+            console.warn(`\n⚠️ Rate limit hit. Retrying in ${waitTime/1000}s...`);
+            await sleep(waitTime);
+          } else {
+            console.error(`❌ Failed to process chunk:`, error);
+            break; // Skip chunk on non-rate-limit error
           }
-        });
-
-        totalChunks++;
-        process.stdout.write('.'); // Show progress dot
-      } catch (error) {
-        console.error(`❌ Failed to process chunk:`, error);
-        // Continue to next chunk even if one fails
+        }
       }
     }
   }

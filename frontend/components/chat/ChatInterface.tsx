@@ -212,7 +212,7 @@ export function ChatInterface({
             value={input} 
             onChange={(e) => setInput(e.target.value)}
             placeholder={demoMode ? "Try 'How much does it cost?'" : "Ask a question..."}
-            className="flex-1"
+            className="flex-1 text-zinc-900 placeholder:text-zinc-500"
             disabled={isLoading}
           />
           <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
