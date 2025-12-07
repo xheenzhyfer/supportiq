@@ -60,10 +60,10 @@ export default function CreateBotPage() {
         chatbotId: chatbotId
       });
 
-      const stats = ingestRes.data.data;
-      addLog(`✅ Training Complete!`);
-      addLog(`📄 Pages Scraped: ${stats.pages}`);
-      addLog(`🧠 Knowledge Chunks: ${stats.chunks}`);
+      // Fire and Forget Response Handling
+      addLog(`✅ Process Started!`);
+      addLog(`⏳ The server is processing your data in the background.`);
+      addLog(`⚠️ You can chat now, but the bot needs ~2 minutes to learn.`);
 
       setStep('done');
       toast.success('Chatbot is ready!');

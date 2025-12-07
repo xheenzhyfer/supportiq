@@ -22,7 +22,7 @@ export interface ScrapedPage {
  * Crawls a website using Firecrawl and returns clean Markdown.
  * Note: Uses scrape for immediate synchronous results.
  */
-export const crawlWebsite = async (baseUrl: string, limit: number = 10): Promise<ScrapedPage[]> => {
+export const crawlWebsite = async (baseUrl: string, limit: number = 1): Promise<ScrapedPage[]> => {
   console.log(`🕷️ Starting scrape for: ${baseUrl}`);
 
   try {

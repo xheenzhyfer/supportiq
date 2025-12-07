@@ -16,13 +16,15 @@ router.post('/ingest', async (req: Request, res: Response): Promise<void> => {
 
     console.log(`\n📥 Ingesting ${url} for Bot ${chatbotId}`);
 
-    // Call the heavy ingestion process
-    const stats = await processWebsite(url, chatbotId);
+    // Call the heavy ingestion process (Fire and Forget)
+    processWebsite(url, chatbotId).catch(err => 
+      console.error('Background Ingestion Failed:', err)
+    );
 
     res.status(200).json({
       status: 'success',
-      message: 'Ingestion complete',
-      data: stats
+      message: 'Ingestion started in background.',
+      data: { pages: 0, chunks: 0 } // Dummy data
     });
 
   } catch (error: any) {

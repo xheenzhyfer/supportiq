@@ -17,25 +17,6 @@
       bottom: 20px;
       right: 20px;
       z-index: 999999;
-(function() {
-  // 1. Get the config from the script tag
-  const currentScript = document.currentScript;
-  const chatbotId = currentScript.getAttribute('data-chat-id');
-  const baseUrl = new URL(currentScript.src).origin;
-
-  if (!chatbotId) {
-    console.error('SupportIQ: Missing data-chat-id attribute');
-    return;
-  }
-
-  // 2. Inject CSS for the Bubble and Iframe
-  const style = document.createElement('style');
-  style.innerHTML = `
-    #supportiq-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 999999;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
