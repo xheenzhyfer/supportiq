@@ -17,6 +17,25 @@
       bottom: 20px;
       right: 20px;
       z-index: 999999;
+(function() {
+  // 1. Get the config from the script tag
+  const currentScript = document.currentScript;
+  const chatbotId = currentScript.getAttribute('data-chat-id');
+  const baseUrl = new URL(currentScript.src).origin;
+
+  if (!chatbotId) {
+    console.error('SupportIQ: Missing data-chat-id attribute');
+    return;
+  }
+
+  // 2. Inject CSS for the Bubble and Iframe
+  const style = document.createElement('style');
+  style.innerHTML = `
+    #supportiq-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999999;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -34,13 +53,19 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.2s;
+      animation: supportiq-breathe 3s ease-in-out infinite;
     }
     #supportiq-bubble:hover {
       transform: scale(1.05);
+      animation: none; /* Pause breathing on hover */
+    }
+    @keyframes supportiq-breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
     #supportiq-bubble svg {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       color: white;
     }
     #supportiq-iframe {
@@ -79,9 +104,13 @@
   // 5. Create the Bubble Button
   const bubble = document.createElement('div');
   bubble.id = 'supportiq-bubble';
+  // Double Bubble Icon
   bubble.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      <path d="M16 11h.01"></path>
+      <path d="M12 11h.01"></path>
+      <path d="M8 11h.01"></path>
     </svg>
   `;
 
@@ -92,8 +121,13 @@
     iframe.style.display = isOpen ? 'block' : 'none';
     // Change Icon (Chat vs X)
     bubble.innerHTML = isOpen 
-      ? `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`
-      : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg>`;
+      ? `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`
+      : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          <path d="M16 11h.01"></path>
+          <path d="M12 11h.01"></path>
+          <path d="M8 11h.01"></path>
+        </svg>`;
   };
 
   container.appendChild(iframe);
